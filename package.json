@@ -1,0 +1,12 @@
+{
+  "name": "node-auth-test",
+  "version": "0.0.1",
+  "description": "A testbed",
+  "main": "app.js",
+  "dependencies": {
+    "express": "~3.x",
+    "jade": "*"
+    //mongodb
+    //passport
+  }
+}
