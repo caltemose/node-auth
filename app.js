@@ -1,29 +1,51 @@
 var express = require('express'),
-    app = express();
-    //cons = require('consolidate') // Templating library adapter for Express
-    //MongoClient = require('mongodb').MongoClient // Driver for connecting to MongoDB
-    //routes = require('./routes'); // Routes for our application
+    path = require('path'),
+    app = express(),
+    db = require('./config/dbschema'),
+    pass = require('./config/pass'),
+    passport = require('passport'),
+    content = require('./routes/content')(db);
 
-// MongoClient.connect('mongodb://localhost:27017/blog', function(err, db) {
-//     "use strict";
-//     if(err) throw err;
+// MongoClient.connect('mongodb://localhost:27017/passportlocal', function(err, db) {
+//   "use strict";
+//   if(err) throw err;
 
-//     // Register our templating engine
-//     app.engine('html', cons.swig);
-//     app.set('view engine', 'html');
-//     app.set('views', __dirname + '/views');
+  //templating engine
+  app.set('views', path.join(__dirname, 'views'));
+  app.set('view engine', 'jade');
 
-//     // Express middleware to populate 'req.cookies' so we can access cookies
-//     app.use(express.cookieParser());
+  //server settings
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.cookieParser());
+  app.use(express.urlencoded({limit: 1024 * 1024 * 10}));
+  app.use(express.json({limit: 1024 * 1024 * 10}));
 
-//     // Express middleware to populate 'req.body' so we can access POST variables
-//     app.use(express.bodyParser());
+  //session and passport setup 
+  app.use(express.session({secret:'mr-funky-chunky-monkey'}))
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-//     // Application routes
-//     routes(app, db);
+  //static files
+  //app.use(express.static(__dirname + '/public'))
 
-//     app.listen(8082);
-//     console.log('Express server listening on port 8082');
+  //application routes
+  //routes(app, db);
+  app.get('/', content.displayIndex);
+
+  app.get('/login', content.displayLogin);
+  app.post('/login', content.postLogin);
+  app.get('/logout', content.logout);
+
+  app.get('/user', pass.ensureAuthenticated, content.displayUser);
+
+
+  //start server
+  var port = 3333;
+  app.listen(port);
+  console.log('Express server listening on port ' + port);
+
+
 // });
 
 
