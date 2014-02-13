@@ -1,6 +1,8 @@
 extends default
 
 block content
+  h1 Login
+
   form(action="/login" method="POST")
     
     label
@@ -12,3 +14,5 @@ block content
       input(type="password" name="password")
 
     input(type="submit" value="Submit")
+
+    a(href="/lost-password") Forgot your password?

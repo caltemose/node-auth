@@ -3,12 +3,17 @@ extends default
 block content
   h1 Home Page
 
-  div
-    ul
-      - each user in users
-        if user.admin
-          li
-            strong= user.username
-        else
-          li= user.username
-
+  if users
+    div
+      ul
+        each user in users
+          if user.admin
+            li
+              strong= user.username
+          else
+            li= user.username
+  else
+    div 
+      | You should 
+      a(href="/login") login
+      |  to use this site.

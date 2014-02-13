@@ -6,10 +6,30 @@ html
     block title
       title Node Auth
 
-    //- link(rel='stylesheet' href='/assets/css/main-bootstrap.css' type='text/css')
+    link(rel='stylesheet' href='/assets/css/main.css' type='text/css')
   
   body
+
+    header
+      nav
+        ul
+          li
+            a(href="/") Home
+
+          if admin
+            li
+              a(href="/admin") Admin
+
+          if auth
+            li
+              a(href="/user") User
+            li
+              a(href="/logout") Logout
+          else
+            li
+              a(href="/login") Login
     
+
     block content
 
 

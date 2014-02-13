@@ -1,12 +1,22 @@
-var passport = require('passport');
+var passport = require('passport'),
+    bcrypt = require('bcrypt'),
+    EM = require('../config/email-dispatcher');
 
 module.exports = function(db) {
   return {
     displayIndex: function(req, res) {
-      db.userModel.find(function(err, users) {
-        if (err) throw err;
-        return res.render('home', {users: users});
-      })
+      if (req.isAuthenticated()) {
+        var data = {auth:true};
+        if (req.user && req.user.admin) data.admin = true;
+        console.log('auth, admin: ' + data.admin);
+        db.userModel.find(function(err, users) {
+          if (err) throw err;
+          data.users = users;
+          return res.render('home', data);
+        });
+      } else {
+        return res.render('home', {auth:false});
+      }
     },
 
     displayLogin: function(req, res) {
@@ -33,52 +43,64 @@ module.exports = function(db) {
     },
 
     displayUser: function(req, res) {
-      console.log(req.user);
-      return res.render('user', {user: req.user});
+      var data = {auth:true};
+      data.user = req.user;
+      if (req.user.admin) data.admin = true;
+      return res.render('user', data);
+    },
+
+    getLostPassword: function(req, res) {
+      return res.render('user/lost-password', {});
+    },
+
+    postLostPassword: function(req, res) {
+      db.userModel.findOne({email:req.body.email}, function(err, user) {
+        if (err) throw err;
+        if (user && user.email) {
+          EM.dispatchResetPasswordLink(user, function(err, m) {
+            var data = {user: user};
+            if (!err) data.success = true;
+            console.log('email sent? ' + data.success);
+            return res.render('user/lost-password-sent', data);
+          });
+        } else {
+          var data = {nouser: req.body.email};
+          return res.render('user/lost-password', data);
+        }
+      });
+    },
+
+    getResetPassword: function(req, res) {
+      var email = req.query["e"],
+          passH = req.query["p"];
+      if (!email || !passH) res.redirect('/')
+      else {
+        db.userModel.find({ $and: [{email:email, password:passH}] }, function(err, user) {
+          if (user) {
+            req.session.reset = { email:email, passHash:passH };
+            res.render('user/reset-password', {email:email});
+          } else res.redirect('/');
+        });
+      }   
+    },
+
+    postResetPassword: function(req, res) {
+      var newPass = req.param('password');
+      var email = req.session.reset.email;
+      req.session.destroy();
+      var data = {};
+      data.email = email;
+      db.userModel.findOne({email:email}, function(err, user) {
+        if (err) data.err = err;
+        else {
+          user.password = newPass;
+          user.save(function(err) {
+            if (err) data.err = err;
+            else data.success = true;
+            res.render('user/reset-password-results', data);
+          });
+        }
+      });
     }
   }
 }
-
-
-// exports.displayIndex = function(req, res) {
-//   var users = db.collection('users');
-//   users.find({}).toArray(function(err, results) {
-//     if(err) throw err;
-//     return res.render('home', {users: results});
-//   });
-// }
-
-
-// function ContentHandler (db) {
-
-//   var passport = require('passport');
-
-//   this.displayIndex = function(req, res, next) {
-//     var users = db.collection('users');
-//     users.find({}).toArray(function(err, results) {
-//       if(err) throw err;
-//       return res.render('home', {users: results});
-//     });
-//   }
-
-//   this.displayLogin = function(req, res, next) {
-//     return res.render('login');
-//   }
-
-//   this.postLogin = function(req, res, next) {
-//     passport.authenticate('local', function(err, user, info) {
-//       if (err) { return next(err) }
-//       if (!user) {
-//         req.session.messages =  [info.message];
-//         return res.redirect('/login')
-//       }
-//       req.logIn(user, function(err) {
-//         if (err) { return next(err); }
-//         return res.redirect('/');
-//       });
-//     })(req, res, next);
-//   }
-
-// }
-
-// module.exports = ContentHandler;
