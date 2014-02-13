@@ -61,7 +61,7 @@ module.exports = function(db) {
             var data = {user: user};
             if (!err) data.success = true;
             console.log('email sent? ' + data.success);
-            return res.render('user/lost-password-sent', data);
+            return res.render('user/lost-password-results', data);
           });
         } else {
           var data = {nouser: req.body.email};
