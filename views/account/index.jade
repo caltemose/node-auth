@@ -1,0 +1,18 @@
+extends ../default
+
+block content
+
+  if user.admin
+    h1 Admin Account Page
+    p This page should have:
+    ul
+      li info about being an admin and responsibilities
+      li link to show all users for managing them
+      li link to property list for managing them
+
+  else
+    h1 User Account Page
+    p This page should have:
+    ul
+      li link to show my properties
+      li link to edit my basic account settings (email, pass, etc)

@@ -1,9 +1,12 @@
 extends default
 
 block content
-  h1 Home Page
+  h1 Welcome to CivicSpaces
+
+  div Hi there.
 
   if users
+    h2 Users:
     div
       ul
         each user in users
@@ -12,8 +15,4 @@ block content
               strong= user.username
           else
             li= user.username
-  else
-    div 
-      | You should 
-      a(href="/login") login
-      |  to use this site.
+  

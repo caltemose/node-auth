@@ -1,7 +1,12 @@
-extends default
+extends ../default
 
 block content
   h1 Login
+
+  if flash
+    p.error 
+      | Login Error: 
+      em= flash
 
   form(action="/login" method="POST")
     

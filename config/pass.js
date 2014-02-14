@@ -36,7 +36,7 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
 //check for admin middleware, this is unrelated to passport.js
 exports.ensureAdmin = function ensureAdmin(req, res, next) {
   return function(req, res, next) {
-    console.log(req.user);
+    //console.log(req.user);
     if(req.user && req.user.admin === true) next();
     else res.send(403);
   }

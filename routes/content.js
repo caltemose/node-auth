@@ -8,19 +8,23 @@ module.exports = function(db) {
       if (req.isAuthenticated()) {
         var data = {auth:true};
         if (req.user && req.user.admin) data.admin = true;
-        console.log('auth, admin: ' + data.admin);
-        db.userModel.find(function(err, users) {
-          if (err) throw err;
-          data.users = users;
-          return res.render('home', data);
-        });
+        if (data.admin) {
+          db.userModel.find(function(err, users) {
+            if (err) throw err;
+            data.users = users;
+            return res.render('home', data);
+          });
+        } else return res.render('home', data);
       } else {
         return res.render('home', {auth:false});
       }
     },
 
     displayLogin: function(req, res) {
-      return res.render('login');
+      var data = {};
+      console.log(req.session.messages);
+      if (req.session.messages) data.flash = req.session.messages;
+      return res.render('account/login', data);
     },
 
     postLogin: function(req, res, next) {
@@ -42,15 +46,15 @@ module.exports = function(db) {
       res.redirect('/');
     },
 
-    displayUser: function(req, res) {
+    displayAccount: function(req, res) {
       var data = {auth:true};
       data.user = req.user;
       if (req.user.admin) data.admin = true;
-      return res.render('user', data);
+      return res.render('account/index', data);
     },
 
     getLostPassword: function(req, res) {
-      return res.render('user/lost-password', {});
+      return res.render('account/lost-password', {});
     },
 
     postLostPassword: function(req, res) {
@@ -61,11 +65,11 @@ module.exports = function(db) {
             var data = {user: user};
             if (!err) data.success = true;
             console.log('email sent? ' + data.success);
-            return res.render('user/lost-password-results', data);
+            return res.render('account/lost-password-results', data);
           });
         } else {
           var data = {nouser: req.body.email};
-          return res.render('user/lost-password', data);
+          return res.render('account/lost-password', data);
         }
       });
     },
@@ -78,7 +82,7 @@ module.exports = function(db) {
         db.userModel.find({ $and: [{email:email, password:passH}] }, function(err, user) {
           if (user) {
             req.session.reset = { email:email, passHash:passH };
-            res.render('user/reset-password', {email:email});
+            res.render('account/reset-password', {email:email});
           } else res.redirect('/');
         });
       }   
@@ -97,7 +101,7 @@ module.exports = function(db) {
           user.save(function(err) {
             if (err) data.err = err;
             else data.success = true;
-            res.render('user/reset-password-results', data);
+            res.render('account/reset-password-results', data);
           });
         }
       });

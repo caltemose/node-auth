@@ -1,12 +1,16 @@
-var express = require('express'),
+var 
+    //libs
+    express = require('express'),
     path = require('path'),
     app = express(),
+    passport = require('passport'),
+    //config
     db = require('./config/dbschema'),
     pass = require('./config/pass'),
-    passport = require('passport'),
+    EM = require('./config/email-dispatcher'),
+    //routing
     content = require('./routes/content')(db),
-    admin = require('./routes/admin')(db),
-    EM = require('./config/email-dispatcher');
+    admin = require('./routes/admin')(db);
 
 
 //templating engine
@@ -39,7 +43,7 @@ app.get('/reset-password', content.getResetPassword);
 app.post('/reset-password', content.postResetPassword);
 
 //user routing
-app.get('/user', pass.ensureAuthenticated, content.displayUser);
+app.get('/account', pass.ensureAuthenticated, content.displayAccount);
 
 //admin routing
 app.get('/admin', pass.ensureAuthenticated, pass.ensureAdmin(), admin.displayIndex);
@@ -48,5 +52,5 @@ app.get('/admin', pass.ensureAuthenticated, pass.ensureAdmin(), admin.displayInd
 //start server
 var port = 3333;
 app.listen(port);
-console.log('Express server listening on port ' + port);
-console.log('--------------------------------------------->');
+console.log('-------------------------------------------------------------------------------');
+console.log('Express server listening on port:     ' + port);
