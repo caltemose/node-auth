@@ -34,20 +34,29 @@ app.use(express.static(__dirname + '/public'))
 
 //public routing
 app.get('/', content.displayIndex);
-app.get('/login', content.displayLogin);
+//login
+app.get('/login', content.displayLogin); // @TODO change this name -> getLogin()
 app.post('/login', content.postLogin);
 app.get('/logout', content.logout);
+//password reset process
 app.get('/lost-password', content.getLostPassword);
 app.post('/lost-password', content.postLostPassword);
 app.get('/reset-password', content.getResetPassword);
 app.post('/reset-password', content.postResetPassword);
+//create new user
+app.get('/new-user', content.getNewUser);
+app.post('/new-user', content.postNewUser);
+
 
 //user routing
 app.get('/account', pass.ensureAuthenticated, content.displayAccount);
 
-//admin routing
-app.get('/admin', pass.ensureAuthenticated, pass.ensureAdmin(), admin.displayIndex);
 
+//admin routing
+app.get('/admin', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getIndex);
+app.get('/admin/users', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getUsers);
+app.get('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getUserDelete);
+app.post('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.postUserDelete);
 
 //start server
 var port = 3333;

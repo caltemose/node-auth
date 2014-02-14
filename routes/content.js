@@ -1,5 +1,6 @@
 var passport = require('passport'),
     bcrypt = require('bcrypt'),
+    schema = require('../config/dbschema'),
     EM = require('../config/email-dispatcher');
 
 module.exports = function(db) {
@@ -22,6 +23,7 @@ module.exports = function(db) {
 
     displayLogin: function(req, res) {
       var data = {};
+      //@TODO req.session.messages isn't getting wiped - fix flash issue
       console.log(req.session.messages);
       if (req.session.messages) data.flash = req.session.messages;
       return res.render('account/login', data);
@@ -104,6 +106,25 @@ module.exports = function(db) {
             res.render('account/reset-password-results', data);
           });
         }
+      });
+    },
+
+    getNewUser: function(req, res) {
+      res.render('account/create-user');
+    },
+
+    postNewUser: function(req, res) {
+      var newUser = schema.userModel({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        admin: false
+      });
+      newUser.save(function(err, user) {
+        var data = {};
+        if (err) data.err = err; // @TODO return to 'account/create-user' with flash error
+        if (user) data.user = user;
+        res.render('account/create-user-results', data);
       });
     }
   }

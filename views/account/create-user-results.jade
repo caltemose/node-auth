@@ -1,0 +1,18 @@
+extends ../default
+
+block content
+  h1 User Account Created
+
+  if err
+    p.error Your account was not created because of the following error:
+    p= err
+  if user
+    p Your new account has been created with the following info:
+    ul
+      li username: #{user.username}
+      li email: #{user.email}
+
+    p
+      | You can now 
+      a(href="/login") login here
+      | .

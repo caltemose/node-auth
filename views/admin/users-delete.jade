@@ -1,0 +1,16 @@
+extends ../default
+
+block content
+  h1 Delete User
+
+  p Make sure you know what you're doing here.
+
+  p The user to delete is:
+
+  strong= user
+
+  p When you click the button below, you will delete this user forever.
+
+  form(method="POST")
+    input(type="hidden" name="user" value="#{user}") 
+    input(type="submit" name="submit" value="Delete User Forever")

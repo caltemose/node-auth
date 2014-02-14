@@ -1,0 +1,35 @@
+extends ../default
+
+block content
+  h1 Create a New User Account
+
+  form(method="POST")
+
+    label
+      | Username: 
+      input(type="text" name="username")
+
+    label
+      | Email Address: 
+      input(type="text" name="email")
+    
+    label
+      | Password: 
+      input(type="password" name="password")
+
+    label
+      | Confirm Password: 
+      input(type="password" name="confirm")
+
+    label
+      input(type="checkbox" name="terms") 
+      | I agree to the 
+      a(href="/terms") Terms and Conditions 
+      | of this site.
+
+
+    input(type="submit" value="Submit")
+
+    p
+      a(href="/lost-password") Login
+      |  if you already have an account.

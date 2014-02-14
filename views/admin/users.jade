@@ -1,0 +1,13 @@
+extends ../default
+
+block content
+  h1 Manage Users
+
+  p This page lets you delete users.
+
+  ul
+    each user in users
+      li
+        | #{user.username} 
+        small
+          a(href="/admin/users/delete/?id=#{user.username}") [delete]
