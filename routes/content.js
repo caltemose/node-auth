@@ -3,38 +3,31 @@ var passport = require('passport'),
     schema = require('../config/dbschema'),
     EM = require('../config/email-dispatcher');
 
-module.exports = function(db) {
+module.exports = function(app, db) {
   return {
     displayIndex: function(req, res) {
       if (req.isAuthenticated()) {
-        var data = {auth:true};
-        if (req.user && req.user.admin) data.admin = true;
-        if (data.admin) {
+        if (req.user && req.user.admin) {
           db.userModel.find(function(err, users) {
             if (err) throw err;
-            data.users = users;
-            return res.render('home', data);
+            return res.render('home', {users:users});
           });
-        } else return res.render('home', data);
+        } else return res.render('home');
       } else {
-        return res.render('home', {auth:false});
+        return res.render('home');
       }
     },
 
     displayLogin: function(req, res) {
-      var data = {};
-      //@TODO req.session.messages isn't getting wiped - fix flash issue
-      console.log(req.session.messages);
-      if (req.session.messages) data.flash = req.session.messages;
-      return res.render('account/login', data);
+      return res.render('account/login', {});
     },
 
     postLogin: function(req, res, next) {
       passport.authenticate('local', function(err, user, info) {
         if (err) { return next(err) }
         if (!user) {
-          req.session.messages =  [info.message];
-          return res.redirect('/login')
+          var data = {flash: info.message};
+          return res.render('account/login', data);
         }
         req.logIn(user, function(err) {
           if (err) { return next(err); }
@@ -49,10 +42,7 @@ module.exports = function(db) {
     },
 
     displayAccount: function(req, res) {
-      var data = {auth:true};
-      data.user = req.user;
-      if (req.user.admin) data.admin = true;
-      return res.render('account/index', data);
+      return res.render('account/index');
     },
 
     getLostPassword: function(req, res) {

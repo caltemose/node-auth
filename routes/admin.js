@@ -28,6 +28,5 @@ module.exports = function(db) {
       //@TODO delete this user from the system and display results
       res.render('admin/users-delete-results', data);
     }
-
   }
 }

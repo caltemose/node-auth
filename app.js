@@ -9,8 +9,8 @@ var
     pass = require('./config/pass'),
     EM = require('./config/email-dispatcher'),
     //routing
-    content = require('./routes/content')(db),
-    admin = require('./routes/admin')(db);
+    content = require('./routes/content')(app, db),
+    admin = require('./routes/admin')(app, db);
 
 
 //templating engine
@@ -25,15 +25,18 @@ app.use(express.urlencoded({limit: 1024 * 1024 * 10}));
 app.use(express.json({limit: 1024 * 1024 * 10}));
 
 //session and passport setup 
-app.use(express.session({secret:'mr-funky-chunky-monkey'}))
+//@TODO research best session age values
+app.use(express.session({secret:'mr-funky-chunky-monkey', cookie: { maxAge : 1*60*60*1000 }}))
 app.use(passport.initialize());
 app.use(passport.session());
+
+// 3600000 = 3600 * 1000 = 60 * 60 * 1000
 
 //static files
 app.use(express.static(__dirname + '/public'))
 
 //public routing
-app.get('/', content.displayIndex);
+app.get('/', pass.getAuthenticated, content.displayIndex);
 //login
 app.get('/login', content.displayLogin); // @TODO change this name -> getLogin()
 app.post('/login', content.postLogin);

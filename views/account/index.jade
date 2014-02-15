@@ -2,18 +2,36 @@ extends ../default
 
 block content
 
+  h1 Your Account
+
+  p 
+    | username: 
+    strong #{user.username}
+    br
+    | email: 
+    strong #{user.email}
+
   if user.admin
-    h1 Admin Account Page
-    p This page should have:
-    ul
-      li info about being an admin and responsibilities
+
+    p (info about administrator responsibilities)
+
+    h3 Administrator Tools
+
+    ul.admin
       li
         a(href="/admin/users") Manage Users
-      li link to property list for managing them
+      li
+        a(href="/admin/properties") View all active property listings
+      li
+        a(href="/admin/properties/inactive") View all inactive property listings
 
-  else
-    h1 User Account Page
-    p This page should have:
-    ul
-      li link to show my properties
-      li link to edit my basic account settings (email, pass, etc)
+
+  p (info about member responsibilities)
+
+  h3 Member Tools
+
+  ul
+    li
+      a(href="/account/properties") View my property listings
+    li
+      a(href="/user/edit") Edit my user account info

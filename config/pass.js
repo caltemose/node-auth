@@ -27,16 +27,37 @@ passport.use(new LocalStrategy(function(username, password, done) {
   });
 }));
 
+exports.getAuthenticated = function getAuthenticated(req, res, next) {
+  if (req.user) {
+    res.locals.user = {
+      username: req.user.username,
+      email: req.user.email,
+      admin: req.user.admin
+    };
+    if (req.isAuthenticated()) res.locals.auth = true;
+  }
+  return next();
+}
+
 //simple route middleware to ensure user is authenticated
 exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  if (req.isAuthenticated()) {
+    res.locals.auth = true;
+    if (req.user) {
+      res.locals.user = {
+        username: req.user.username,
+        email: req.user.email,
+        admin: req.user.admin
+      };  
+    }
+    return next();
+  }
+  res.redirect('/login');
 }
 
 //check for admin middleware, this is unrelated to passport.js
 exports.ensureAdmin = function ensureAdmin(req, res, next) {
   return function(req, res, next) {
-    //console.log(req.user);
     if(req.user && req.user.admin === true) next();
     else res.send(403);
   }
