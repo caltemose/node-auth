@@ -1,4 +1,6 @@
-extends ../default
+extends ../../default
+
+//- @TODO handle errors with deletion response
 
 block title
   title #{sitetitle} | User Deleted
@@ -9,8 +11,4 @@ block content
 
   p This user has been removed from the system:
 
-  strong= user
-
-  p
-    small
-      em (not yet, still @TODO)
+  strong= username

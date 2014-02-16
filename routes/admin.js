@@ -1,32 +1,31 @@
 var passport = require('passport');
-var defaultData = {auth:true,admin:true};
 
 module.exports = function(app, db) {
   return {
     getIndex: function(req, res) {
-      return res.render('admin/index', defaultData);
+      return res.render('admin/index');
     },
 
     getUsers: function(req, res) {
-      var data = {auth:true,admin:true};
+      var data = {};
       db.userModel.find(function(err, users) {
         if (err) throw err;
         data.users = users;
-        return res.render('admin/users', data);
+        return res.render('admin/users/index', data);
       });
     },
 
     getUserDelete: function(req, res) {
-      var data = {auth:true,admin:true};
-      data.user = req.query.id;
-      res.render('admin/users-delete', data);
+      res.render('admin/users/delete', {username: req.query.id});
     },
 
     postUserDelete: function(req, res) {
-      var data = {auth:true,admin:true};
-      data.user = req.body.user;
-      //@TODO delete this user from the system and display results
-      res.render('admin/users-delete-results', data);
+      var data = {username: req.body.username};
+      db.userModel.findOneAndRemove({ username: data.username }, function(err, doc) {
+        if (err) data.err = err;
+        if (doc) data.doc = doc;
+        res.render('admin/users/delete-results', data);
+      });
     }
   }
 }

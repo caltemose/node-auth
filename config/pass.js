@@ -27,6 +27,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
   });
 }));
 
+//simple route middleware to determine if user is authenticated
 exports.getAuthenticated = function getAuthenticated(req, res, next) {
   if (req.user) {
     res.locals.user = {

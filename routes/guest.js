@@ -5,21 +5,21 @@ var passport = require('passport'),
 
 module.exports = function(app, db) {
   return {
-    displayIndex: function(req, res) {
+    getIndex: function(req, res) {
       if (req.isAuthenticated()) {
         if (req.user && req.user.admin) {
           db.userModel.find(function(err, users) {
             if (err) throw err;
-            return res.render('home', {users:users});
+            return res.render('public/home', {users:users});
           });
-        } else return res.render('home');
+        } else return res.render('public/home');
       } else {
-        return res.render('home');
+        return res.render('public/home');
       }
     },
 
-    displayLogin: function(req, res) {
-      return res.render('account/login', {});
+    getLogin: function(req, res) {
+      return res.render('public/login', {});
     },
 
     postLogin: function(req, res, next) {
@@ -27,7 +27,7 @@ module.exports = function(app, db) {
         if (err) { return next(err) }
         if (!user) {
           var data = {flash: info.message};
-          return res.render('account/login', data);
+          return res.render('public/login', data);
         }
         req.logIn(user, function(err) {
           if (err) { return next(err); }
@@ -41,12 +41,8 @@ module.exports = function(app, db) {
       res.redirect('/');
     },
 
-    displayAccount: function(req, res) {
-      return res.render('account/index');
-    },
-
     getLostPassword: function(req, res) {
-      return res.render('account/lost-password', {});
+      return res.render('public/password/lost-password', {});
     },
 
     postLostPassword: function(req, res) {
@@ -57,11 +53,11 @@ module.exports = function(app, db) {
             var data = {user: user};
             if (!err) data.success = true;
             console.log('email sent? ' + data.success);
-            return res.render('account/lost-password-results', data);
+            return res.render('public/password/lost-password-results', data);
           });
         } else {
           var data = {nouser: req.body.email};
-          return res.render('account/lost-password', data);
+          return res.render('public/password/lost-password', data);
         }
       });
     },
@@ -74,7 +70,7 @@ module.exports = function(app, db) {
         db.userModel.find({ $and: [{email:email, password:passH}] }, function(err, user) {
           if (user) {
             req.session.reset = { email:email, passHash:passH };
-            res.render('account/reset-password', {email:email});
+            res.render('public/password/reset-password', {email:email});
           } else res.redirect('/');
         });
       }   
@@ -93,14 +89,14 @@ module.exports = function(app, db) {
           user.save(function(err) {
             if (err) data.err = err;
             else data.success = true;
-            res.render('account/reset-password-results', data);
+            res.render('public/password/reset-password-results', data);
           });
         }
       });
     },
 
     getNewUser: function(req, res) {
-      res.render('account/create-user');
+      res.render('public/create-user/index');
     },
 
     postNewUser: function(req, res) {
@@ -114,13 +110,13 @@ module.exports = function(app, db) {
         var data = {};
         if (err) {
           data.err = err; 
-          return res.render('account/create-user', data);
+          return res.render('public/create-user', data);
         }
         if (user) {
           data.user = user;
           data.pagetitle = "New User Created Successfully"
         } else data.pagetitle = "Could Not Create New User"
-        res.render('account/create-user-results', data);
+        res.render('public/create-user/results', data);
       });
     }
   }

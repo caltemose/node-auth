@@ -1,4 +1,4 @@
-extends ../default
+extends ../../default
 
 block title
   title #{sitetitle} | Delete User - Confirmation
@@ -12,12 +12,12 @@ block content
 
   p The user to delete is:
 
-  strong= user
+  strong= username
 
   p 
     | When you click the button below, you will delete this user 
     strong forever.
 
   form(method="POST")
-    input(type="hidden" name="user" value="#{user}") 
+    input(type="hidden" name="username" value="#{username}") 
     input(type="submit" name="submit" value="Delete User Forever")

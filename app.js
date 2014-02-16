@@ -9,8 +9,9 @@ var
     pass = require('./config/pass'),
     EM = require('./config/email-dispatcher'),
     //routing
-    content = require('./routes/content')(app, db),
-    admin = require('./routes/admin')(app, db);
+    guest = require('./routes/guest')(app, db), // public routes
+    user  = require('./routes/user')(app, db), // user only routes
+    admin = require('./routes/admin')(app, db); // admin only routes
 
 var CONFIG = {
     port: 3333,
@@ -44,25 +45,26 @@ app.use(passport.session());
 app.use(express.static(__dirname + '/public'));
 
 //public routing
-app.get('/', pass.getAuthenticated, content.displayIndex);
+app.get('/', pass.getAuthenticated, guest.getIndex);
 //login
-app.get('/login', content.displayLogin); // @TODO change this name -> getLogin()
-app.post('/login', content.postLogin);
-app.get('/logout', content.logout);
+app.get('/login', guest.getLogin);
+app.post('/login', guest.postLogin);
+app.get('/logout', guest.logout);
 //password reset process
-app.get('/lost-password', content.getLostPassword);
-app.post('/lost-password', content.postLostPassword);
-app.get('/reset-password', content.getResetPassword);
-app.post('/reset-password', content.postResetPassword);
+app.get('/lost-password', guest.getLostPassword);
+app.post('/lost-password', guest.postLostPassword);
+app.get('/reset-password', guest.getResetPassword);
+app.post('/reset-password', guest.postResetPassword);
 //create new user
-app.get('/new-user', content.getNewUser);
-app.post('/new-user', content.postNewUser);
+app.get('/new-user', guest.getNewUser);
+app.post('/new-user', guest.postNewUser);
 
 
 //user routing
-//@TODO change to /user add app.all() for /user to ensure authentication
-app.get('/account', pass.ensureAuthenticated, content.displayAccount);
-
+//@TODO add app.all() for /user to ensure authentication
+app.get('/user', pass.ensureAuthenticated, user.getIndex);
+//app.get('/user/edit', pass.ensureAuthenticated, user.getEdit);
+//app.post('/user/edit', pass.ensureAuthenticated, user.postEdit);
 
 //admin routing
 //@TODO add app.all() for /admin to ensure authentication and admin level authorization
