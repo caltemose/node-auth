@@ -1,7 +1,7 @@
 var passport = require('passport');
 var defaultData = {auth:true,admin:true};
 
-module.exports = function(db) {
+module.exports = function(app, db) {
   return {
     getIndex: function(req, res) {
       return res.render('admin/index', defaultData);

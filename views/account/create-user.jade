@@ -1,7 +1,14 @@
 extends ../default
 
+block title
+  title #{sitetitle} | Create a New User Account
+
+
 block content
   h1 Create a New User Account
+
+  if err
+    p.error= err
 
   form(method="POST")
 

@@ -112,8 +112,14 @@ module.exports = function(app, db) {
       });
       newUser.save(function(err, user) {
         var data = {};
-        if (err) data.err = err; // @TODO return to 'account/create-user' with flash error
-        if (user) data.user = user;
+        if (err) {
+          data.err = err; 
+          return res.render('account/create-user', data);
+        }
+        if (user) {
+          data.user = user;
+          data.pagetitle = "New User Created Successfully"
+        } else data.pagetitle = "Could Not Create New User"
         res.render('account/create-user-results', data);
       });
     }

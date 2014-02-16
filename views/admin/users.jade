@@ -1,13 +1,19 @@
 extends ../default
 
+block title
+  title #{sitetitle} | Manage Users
+
 block content
   h1 Manage Users
 
-  p This page lets you delete users.
+  p This page shows all users and lets you manage them.
 
   ul
     each user in users
       li
         | #{user.username} 
-        small
-          a(href="/admin/users/delete/?id=#{user.username}") [delete]
+        unless user.admin
+          small
+            a(href="/admin/users/delete/?id=#{user.username}") [delete]
+          small
+            a(href="/admin/users/edit/?id=#{user.username}") [edit]

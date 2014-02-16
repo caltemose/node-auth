@@ -1,9 +1,19 @@
 extends ../default
 
+block title
+  title #{sitetitle} | Administrator Index
+
 block content
-  h1 Admin Index
+  h1 Administrator Index
 
-  p You're an administrator. Yay! Stuff you can do:
+  p You're an administrator. Yay! Special stuff you can do:
 
+  ul
+    li
+      a(href="/admin/users") Manage Users 
+      small  edit | de/activate| delete | create
+    li
+      a(href="/") Manage Properties
+      small  edit | de/activate | delete | create | change owner
 
   

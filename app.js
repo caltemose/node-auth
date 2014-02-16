@@ -12,6 +12,16 @@ var
     content = require('./routes/content')(app, db),
     admin = require('./routes/admin')(app, db);
 
+var CONFIG = {
+    port: 3333,
+    postlimit: 1024 * 1024 * 10,
+    jsonlimit: 1024 * 1024 * 10,
+    secret: 'mr-funky-chunky-monkey',
+    sessionage: 1*60*60*1000
+};
+
+//default HTML <title> value
+app.locals.sitetitle = 'Node Auth';
 
 //templating engine
 app.set('views', path.join(__dirname, 'views'));
@@ -21,19 +31,17 @@ app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.cookieParser());
-app.use(express.urlencoded({limit: 1024 * 1024 * 10}));
-app.use(express.json({limit: 1024 * 1024 * 10}));
+app.use(express.urlencoded({limit: CONFIG.postlimit}));
+app.use(express.json({limit: CONFIG.jsonlimit}));
 
 //session and passport setup 
-//@TODO research best session age values
-app.use(express.session({secret:'mr-funky-chunky-monkey', cookie: { maxAge : 1*60*60*1000 }}))
+//@TODO determine best session age values
+app.use(express.session({secret: CONFIG.secret, cookie: { maxAge : CONFIG.sessionage }}))
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 3600000 = 3600 * 1000 = 60 * 60 * 1000
-
 //static files
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public'));
 
 //public routing
 app.get('/', pass.getAuthenticated, content.displayIndex);
@@ -52,17 +60,19 @@ app.post('/new-user', content.postNewUser);
 
 
 //user routing
+//@TODO change to /user add app.all() for /user to ensure authentication
 app.get('/account', pass.ensureAuthenticated, content.displayAccount);
 
 
 //admin routing
+//@TODO add app.all() for /admin to ensure authentication and admin level authorization
 app.get('/admin', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getIndex);
 app.get('/admin/users', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getUsers);
 app.get('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getUserDelete);
 app.post('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.postUserDelete);
 
+
 //start server
-var port = 3333;
-app.listen(port);
+app.listen(CONFIG.port);
 console.log('-------------------------------------------------------------------------------');
-console.log('Express server listening on port:     ' + port);
+console.log('Express server listening on port:     ' + CONFIG.port);

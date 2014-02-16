@@ -1,7 +1,7 @@
 extends default
 
 block content
-  h1 Welcome to CivicSpaces
+  h1 Node Auth
 
   div Hi there.
 
@@ -16,3 +16,20 @@ block content
           else
             li= user.username
   
+
+  unless auth
+    form(action="/login" method="POST")
+      
+      h3 Login:
+
+      label
+        | Username: 
+        input(type="text" name="username")
+      
+      label
+        | Password: 
+        input(type="password" name="password")
+
+      input(type="submit" value="Submit")
+
+      a(href="/lost-password") Forgot your password?

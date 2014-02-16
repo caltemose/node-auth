@@ -1,15 +1,22 @@
 extends ../default
 
-block content
-  h1 Delete User
+block title
+  title #{sitetitle} | Delete User - Confirmation
 
-  p Make sure you know what you're doing here.
+block content
+  h1 Delete User - Confirmation
+
+  p
+    | Make sure you know what you're doing here because 
+    strong there is no undo.
 
   p The user to delete is:
 
   strong= user
 
-  p When you click the button below, you will delete this user forever.
+  p 
+    | When you click the button below, you will delete this user 
+    strong forever.
 
   form(method="POST")
     input(type="hidden" name="user" value="#{user}") 

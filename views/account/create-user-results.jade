@@ -1,7 +1,10 @@
 extends ../default
 
+block title
+  title #{sitetitle} | #{pagetitle}
+
 block content
-  h1 User Account Created
+  h1= pagetitle
 
   if err
     p.error Your account was not created because of the following error:
@@ -16,3 +19,5 @@ block content
       | You can now 
       a(href="/login") login here
       | .
+
+    div(style="font-size:3em")= err
