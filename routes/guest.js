@@ -77,18 +77,23 @@ module.exports = function(app, db) {
     },
 
     postResetPassword: function(req, res) {
+      var data = {};
       var newPass = req.param('password');
+      var newPassConfirm = req.param('password-confirm');
+      if (newPass != newPassConfirm) {
+        data.err = 'Passwords do not match.';
+        return res.render('public/password/reset-password', data);
+      }
       var email = req.session.reset.email;
       req.session.destroy();
-      var data = {};
       data.email = email;
+      console.log(data.email, req.body)
       db.userModel.findOne({email:email}, function(err, user) {
         if (err) data.err = err;
         else {
           user.password = newPass;
           user.save(function(err) {
             if (err) data.err = err;
-            else data.success = true;
             res.render('public/password/reset-password-results', data);
           });
         }

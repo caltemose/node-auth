@@ -1,0 +1,44 @@
+extends ../default
+
+block title
+  title #{sitetitle} | Edit Your Account
+
+block content
+
+  h1 Edit Your Account
+    
+  p 
+    | Your username is:  
+    strong #{user.username}
+    br
+    |  and it cannot be changed. 
+    small
+      a(href="#" title="Because I said so.") Why?
+
+  form(method="POST")
+    input(type="hidden" name="username" value="#{user.username}")
+
+    label
+      | email: 
+      input(type="text" name="username" value="#{user.email}" maxlength="128")
+
+    input(type="submit" name="submit" value="Update My Email")
+
+
+
+  form(action="/reset-password" method="POST")
+    input(type="hidden" name="username" value="#{user.username}")
+    label
+      | new password: 
+      input(type="text" name="newpassword" maxlength="128")
+
+    label
+      | confirm new password: 
+      input(type="text" name="newpassword" maxlength="128")
+
+    input(type="submit" name="submit" value="Update My Email")
+
+    p If you change your password you will need to re-login after your password is updated.
+
+
+    

@@ -63,7 +63,7 @@ app.post('/new-user', guest.postNewUser);
 //user routing
 //@TODO add app.all() for /user to ensure authentication
 app.get('/user', pass.ensureAuthenticated, user.getIndex);
-//app.get('/user/edit', pass.ensureAuthenticated, user.getEdit);
+app.get('/user/edit', pass.ensureAuthenticated, user.getEdit);
 //app.post('/user/edit', pass.ensureAuthenticated, user.postEdit);
 
 //admin routing
