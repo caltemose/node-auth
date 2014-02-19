@@ -23,32 +23,65 @@
     span = parent.find 'span'
     rules = field.attr('data-validation').split '|'
     errorMessages = field.attr('data-validation-errors').split '|'
+    oneError = errorMessages.length < rules.length
     errors = []
-    i=0;
+    i = 0
 
     for rule in rules
-      do (rule) ->
-        switch rule
-          when "required" then unless field.val().length > 0
+
+      if rule.match(/^match-/)
+        partnerName = rule.substr(6)
+        rule = 'match'
+
+      switch rule
+        when "required" then unless field.val().length > 0
+          if oneError and errors.length < 1
+            errors.push errorMessages[0]
+          else if not oneError
             errors.push errorMessages[i]
-          when "zip" then unless field.val().match(auth.validator.patterns.zip)
+        
+        when "zip" then unless field.val().match(auth.validator.patterns.zip)
+          if oneError and errors.length < 1 
+            errors.push errorMessages[0]
+          else if not oneError
             errors.push errorMessages[i]
-          when "email" then unless field.val().match(auth.validator.patterns.email)
+        
+        when "email" then unless field.val().match(auth.validator.patterns.email)
+          if oneError and errors.length < 1
+            errors.push errorMessages[0]
+          else if not oneError
             errors.push errorMessages[i]
-          when "checked" then unless field.is(':checked')
+        
+        when "checked" then unless field.is(':checked')
+          if oneError and errors.length < 1 
+            errors.push errorMessages[0]
+          else if not oneError
             errors.push errorMessages[i]
-          else
-            break;
+        
+        when "match"
+          partner = $('input[name="' + partnerName + '"]')
+          if field.val().length >1 and field.val() isnt partner.val() and partner.val().length >1
+            if oneError and errors.length < 1 
+              errors.push errorMessages[0]
+            else if not oneError
+              errors.push errorMessages[i]
+        else
+          break;
+
       i++
 
     if errors.length
       valid = false
-      span.text errorMessages.join '<br>' if span.length > 0
+      span.html errors.join '<br>' if span.length > 0
       parent.addClass 'has-error'
     
     else
-      span.text('') unless span.length < 1
+      span.html('') unless span.length < 1
       parent.removeClass 'has-error'
+
+    if field.attr('data-match')
+      partner = $ 'input[name="' + field.attr('data-match') + '"]'
+      auth.validator.validateField partner
 
     valid
 

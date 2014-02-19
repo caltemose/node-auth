@@ -28,56 +28,88 @@
       return auth.validator.validateField($(e.target));
     },
     validateField: function(field) {
-      var errorMessages, errors, i, parent, rule, rules, span, valid, _fn, _i, _len;
+      var errorMessages, errors, i, oneError, parent, partner, partnerName, rule, rules, span, valid, _i, _len;
       valid = true;
       parent = field.parent();
       span = parent.find('span');
       rules = field.attr('data-validation').split('|');
       errorMessages = field.attr('data-validation-errors').split('|');
+      oneError = errorMessages.length < rules.length;
       errors = [];
       i = 0;
-      _fn = function(rule) {
+      for (_i = 0, _len = rules.length; _i < _len; _i++) {
+        rule = rules[_i];
+        if (rule.match(/^match-/)) {
+          partnerName = rule.substr(6);
+          rule = 'match';
+        }
         switch (rule) {
           case "required":
             if (!(field.val().length > 0)) {
-              return errors.push(errorMessages[i]);
+              if (oneError && errors.length < 1) {
+                errors.push(errorMessages[0]);
+              } else if (!oneError) {
+                errors.push(errorMessages[i]);
+              }
             }
             break;
           case "zip":
             if (!field.val().match(auth.validator.patterns.zip)) {
-              return errors.push(errorMessages[i]);
+              if (oneError && errors.length < 1) {
+                errors.push(errorMessages[0]);
+              } else if (!oneError) {
+                errors.push(errorMessages[i]);
+              }
             }
             break;
           case "email":
             if (!field.val().match(auth.validator.patterns.email)) {
-              return errors.push(errorMessages[i]);
+              if (oneError && errors.length < 1) {
+                errors.push(errorMessages[0]);
+              } else if (!oneError) {
+                errors.push(errorMessages[i]);
+              }
             }
             break;
           case "checked":
             if (!field.is(':checked')) {
-              return errors.push(errorMessages[i]);
+              if (oneError && errors.length < 1) {
+                errors.push(errorMessages[0]);
+              } else if (!oneError) {
+                errors.push(errorMessages[i]);
+              }
+            }
+            break;
+          case "match":
+            partner = $('input[name="' + partnerName + '"]');
+            if (field.val().length > 1 && field.val() !== partner.val() && partner.val().length > 1) {
+              if (oneError && errors.length < 1) {
+                errors.push(errorMessages[0]);
+              } else if (!oneError) {
+                errors.push(errorMessages[i]);
+              }
             }
             break;
           default:
             break;
         }
-      };
-      for (_i = 0, _len = rules.length; _i < _len; _i++) {
-        rule = rules[_i];
-        _fn(rule);
         i++;
       }
       if (errors.length) {
         valid = false;
         if (span.length > 0) {
-          span.text(errorMessages.join('<br>'));
+          span.html(errors.join('<br>'));
         }
         parent.addClass('has-error');
       } else {
         if (!(span.length < 1)) {
-          span.text('');
+          span.html('');
         }
         parent.removeClass('has-error');
+      }
+      if (field.attr('data-match')) {
+        partner = $('input[name="' + field.attr('data-match') + '"]');
+        auth.validator.validateField(partner);
       }
       return valid;
     },

@@ -3,7 +3,7 @@ extends ../default
 block content
   h1 Node Auth
 
-  div Hi there.
+  p Hi there.
 
   if users
     h2 Users:
@@ -18,18 +18,15 @@ block content
   
 
   unless auth
-    form(action="/login" method="POST")
-      
-      h3 Login:
+    include includes/login-form
 
-      label
-        | Username: 
-        input(type="text" name="username")
-      
-      label
-        | Password: 
-        input(type="password" name="password")
 
-      input(type="submit" value="Submit")
-
-      a(href="/lost-password") Forgot your password?
+block scripts
+  script(src="/assets/js/auth.validator.js")
+  script.
+    auth.validator.init([
+      $('input[name="username'), $('input[name="password')
+    ]);
+    $('input[type="submit"]').click(function(e) {
+      if (!auth.validator.validateForm()) e.preventDefault();
+    });

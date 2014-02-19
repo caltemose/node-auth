@@ -14,25 +14,25 @@ block content
 
     label
       | Username: 
-      input(type="text" name="username")
+      input(type="text" name="username" data-validation="required" data-validation-errors="Please supply a valid username.") 
+      span.error
 
     label
       | Email Address: 
-      input(type="text" name="email")
+      input(type="text" name="email" data-validation="required|email" data-validation-errors="You must enter a valid email address.")
+      span.error
     
     label
       | Password: 
-      input(type="password" name="password")
+      input(type="password" name="password" data-validation="required" data-validation-errors="Please supply a valid password for this account.") 
+      span.error
 
     label
-      | Confirm Password: 
-      input(type="password" name="confirm")
-
-    label
-      input(type="checkbox" name="terms") 
+      input(type="checkbox" name="terms" data-validation="checked" data-validation-errors="You must agree to the Terms and Conditions of this site.") 
       | I agree to the 
       a(href="/terms") Terms and Conditions 
       | of this site.
+      span.error
 
 
     input(type="submit" value="Submit")
@@ -40,3 +40,18 @@ block content
     p
       a(href="/lost-password") Login
       |  if you already have an account.
+
+
+
+block scripts
+  script(src="/assets/js/auth.validator.js")
+  script.
+    auth.validator.init([
+      $('input[name="username"]'),
+      $('input[name="email"]'),
+      $('input[name="password"]'), 
+      $('input[name="terms"]')
+    ]);
+    $('input[type="submit"]').click(function(e) {
+      if (!auth.validator.validateForm()) e.preventDefault();
+    });

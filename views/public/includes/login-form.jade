@@ -1,0 +1,15 @@
+form(action="/login" method="POST")
+    
+  label
+    | Username: 
+    input(type="text" name="username" data-validation="required" data-validation-errors="Please supply a valid username.") 
+    span.error
+  
+  label
+    | Password: 
+    input(type="password" name="password" data-validation="required" data-validation-errors="Please supply a valid password for this account.") 
+    span.error
+
+  input(type="submit" value="Submit")
+
+  a(href="/lost-password") Forgot your password?
