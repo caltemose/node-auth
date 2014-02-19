@@ -20,6 +20,9 @@ label {
 label > input {
   display: block;
 }
+label > input[type="checkbox"] {
+  display: inline;
+}
 
 input {
   font-size: 1.3em;
@@ -44,6 +47,7 @@ header > nav > ul > li {
 }
 
 .error, .success {
+  display: block;
   font-size: 0.9em;
   font-style: italic;
 }

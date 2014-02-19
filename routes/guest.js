@@ -1,6 +1,6 @@
 var passport = require('passport'),
     bcrypt = require('bcrypt'),
-    schema = require('../config/dbschema'),
+    schema = require('../config/dbm'),
     EM = require('../config/email-dispatcher');
 
 module.exports = function(app, db) {

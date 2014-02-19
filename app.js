@@ -5,7 +5,7 @@ var
     app = express(),
     passport = require('passport'),
     //config
-    db = require('./config/dbschema'),
+    db = require('./config/dbm'),
     pass = require('./config/pass'),
     EM = require('./config/email-dispatcher'),
     //routing
