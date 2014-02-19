@@ -4,16 +4,8 @@ body {
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
 }
 
-header > nav > ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-header > nav > ul > li {
-  display: inline-block;
-  margin: 0 2em 0 0;
-  padding: 0;
+li {
+  margin-bottom: 0.3em;
 }
 
 label {
@@ -32,6 +24,18 @@ input[type="submit"] {
   display: block;
   margin-top: 1em;
   font-size: 1.3em;
+}
+
+header > nav > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+header > nav > ul > li {
+  display: inline-block;
+  margin: 0 2em 0 0;
+  padding: 0;
 }
 
 .error {
