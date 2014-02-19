@@ -37,3 +37,6 @@ input[type="submit"] {
 .error {
   color: #c00;
 }
+.success {
+  color: #080;
+}

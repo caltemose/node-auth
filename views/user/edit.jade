@@ -6,7 +6,13 @@ block title
 block content
 
   h1 Edit Your Account
-    
+  
+  if err
+    p.error= error
+
+  if userUpdated
+    p.success Sweet! Your user information has been updated.
+
   p 
     | Your username is:  
     strong #{user.username}
@@ -19,26 +25,31 @@ block content
     input(type="hidden" name="username" value="#{user.username}")
 
     label
-      | email: 
-      input(type="text" name="username" value="#{user.email}" maxlength="128")
+      | Email Address: 
+      input(type="text" name="email" data-validation="required|email" data-validation-errors="You must enter a valid email address." value="#{user.email}")
+      span.error
 
-    input(type="submit" name="submit" value="Update My Email")
+    //- label
+    //-   | New Password: 
+    //-   input(type="password" name="password") 
+    //-   span.error
 
+    input(type="submit" name="submit" value="Update My Info")
 
-
-  form(action="/reset-password" method="POST")
-    input(type="hidden" name="username" value="#{user.username}")
-    label
-      | new password: 
-      input(type="text" name="newpassword" maxlength="128")
-
-    label
-      | confirm new password: 
-      input(type="text" name="newpassword" maxlength="128")
-
-    input(type="submit" name="submit" value="Update My Email")
-
-    p If you change your password you will need to re-login after your password is updated.
+    //- p If you change your password you will need to re-login after your password is updated.
+    p 
+      | If you wish to change your password use the 
+      a(href="/lost-password") lost-password page
+      |  (for now).
 
 
+block scripts
+  script(src="/assets/js/auth.validator.js")
+  script.
+    auth.validator.init([
+      $('input[name="email')
+    ]);
+    $('input[type="submit"]').click(function(e) {
+      if (!auth.validator.validateForm()) e.preventDefault();
+    });
     
