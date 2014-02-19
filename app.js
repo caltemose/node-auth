@@ -73,6 +73,7 @@ app.get('/admin/users', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getU
 app.get('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.getUserDelete);
 app.post('/admin/users/delete', pass.ensureAuthenticated, pass.ensureAdmin(), admin.postUserDelete);
 
+app.use(function(req, res) { res.render('404'); });
 
 //start server
 app.listen(CONFIG.port);

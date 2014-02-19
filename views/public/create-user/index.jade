@@ -14,21 +14,21 @@ block content
 
     label
       | Username: 
-      input(type="text" name="username" data-validation="required" data-validation-errors="Please supply a valid username.") 
+      input(type="text" name="username" data-validation="required" data-validation-errors="Please enter a valid username.") 
       span.error
 
     label
       | Email Address: 
-      input(type="text" name="email" data-validation="required|email" data-validation-errors="You must enter a valid email address.")
+      input(type="text" name="email" data-validation="required|email" data-validation-errors="Please enter a valid email address.")
       span.error
     
     label
       | Password: 
-      input(type="password" name="password" data-validation="required" data-validation-errors="Please supply a valid password for this account.") 
+      input(type="password" name="password" data-validation="required" data-validation-errors="Please enter a valid password for this account.") 
       span.error
 
     label
-      input(type="checkbox" name="terms" data-validation="checked" data-validation-errors="You must agree to the Terms and Conditions of this site.") 
+      input(type="checkbox" name="terms" data-validation="checked" data-validation-errors="You must agree to the Terms and Conditions of this site in order to create an account.") 
       | I agree to the 
       a(href="/terms") Terms and Conditions 
       | of this site.
@@ -37,9 +37,9 @@ block content
 
     input(type="submit" value="Submit")
 
-    p
-      a(href="/lost-password") Login
-      |  if you already have an account.
+  p
+    a(href="/login") Login
+    |  if you already have an account.
 
 
 
