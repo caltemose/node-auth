@@ -8,8 +8,13 @@ li {
   margin-bottom: 0.3em;
 }
 
+form {
+  margin-bottom: 1em;
+}
+
 label {
   display: block;
+  margin-bottom: 1em;
 }
 
 label > input {
@@ -38,6 +43,10 @@ header > nav > ul > li {
   padding: 0;
 }
 
+.error, .success {
+  font-size: 0.9em;
+  font-style: italic;
+}
 .error {
   color: #c00;
 }
