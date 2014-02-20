@@ -63,10 +63,8 @@
         return $('body').trigger("fieldchange");
       });
       bound_fields = this.fields;
-      $('input', this.house).each(function() {
-        if ($(this).attr('type') !== 'submit') {
-          return bound_fields.push(new Field($(this), self));
-        }
+      $('input', this.house).not("[type=submit]").each(function() {
+        return bound_fields.push(new Field($(this), self));
       });
       this.house.submit(this.process_submission);
       this.house.on('reset_form', this.reset);
@@ -212,16 +210,10 @@
 
     ErrorFlag.prototype.build_flag = function() {
       if (this.flag === void 0) {
-        this.flag = $("<dl><dt>Errors</dt></dl>", {
+        this.flag = $('<span class="error"></span>', {
           css: "display: none;"
-        }).append($("<dd />", {
-          html: this.field.error_message
-        }));
-        if (this.field.house.data().validate === 'radio') {
-          this.flag.insertAfter(this.field.house.find('p'));
-        } else {
-          this.flag.insertAfter(this.field.house);
-        }
+        }).text(this.field.error_message);
+        this.flag.insertAfter(this.field.house);
       }
       return this.flag;
     };

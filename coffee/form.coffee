@@ -11,9 +11,8 @@ class Form
 
     # console.log $('input', @house)
 
-    $('input', @house).each ->
-      unless $(@).attr('type') is 'submit'
-        bound_fields.push new Field $(@), self
+    $('input', @house).not("[type=submit]").each ->
+      bound_fields.push new Field $(@), self
     
     # @submit_button = new SubmitButton $('[type="submit"]', @house), @form, true
     

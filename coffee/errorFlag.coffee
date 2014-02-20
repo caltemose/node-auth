@@ -12,10 +12,11 @@ class ErrorFlag
 
   build_flag: ->
     if @flag is undefined
-      @flag = $("<dl><dt>Errors</dt></dl>", {css: "display: none;"})
-        .append $("<dd />", {html: @field.error_message})
-      if @field.house.data().validate == 'radio'
-        @flag.insertAfter @field.house.find('p')
-      else
-        @flag.insertAfter @field.house
+      @flag = $('<span class="error"></span>', {css: "display: none;"})
+        .text @field.error_message
+      # if @field.house.data().validate == 'radio'
+      #   @flag.insertAfter @field.house.find('p')
+      # else
+      @flag.insertAfter @field.house
+
     @flag
