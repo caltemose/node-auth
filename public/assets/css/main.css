@@ -26,12 +26,14 @@ label > input[type="checkbox"] {
 
 input {
   font-size: 1.3em;
+  width: 18em;
 }
 
 input[type="submit"] {
   display: block;
   margin-top: 1em;
   font-size: 1.3em;
+  width: auto;
 }
 
 header > nav > ul {
