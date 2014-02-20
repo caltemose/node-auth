@@ -20,13 +20,3 @@ block content
   unless auth
     include includes/login-form
 
-
-block scripts
-  script(src="/assets/js/auth.validator.js")
-  script.
-    auth.validator.init([
-      $('input[name="username'), $('input[name="password')
-    ]);
-    $('input[type="submit"]').click(function(e) {
-      if (!auth.validator.validateForm()) e.preventDefault();
-    });

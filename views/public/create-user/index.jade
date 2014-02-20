@@ -14,25 +14,21 @@ block content
 
     label
       | Username: 
-      input(type="text" name="username" data-validation="required" data-validation-errors="Please enter a valid username.") 
-      span.error
+      input(type="text" name="username") 
 
     label
       | Email Address: 
-      input(type="text" name="email" data-validation="required|email" data-validation-errors="Please enter a valid email address.")
-      span.error
+      input(type="text" name="email")
     
     label
       | Password: 
-      input(type="password" name="password" data-validation="required" data-validation-errors="Please enter a valid password for this account.") 
-      span.error
+      input(type="password" name="password") 
 
     label
-      input(type="checkbox" name="terms" data-validation="checked" data-validation-errors="You must agree to the Terms and Conditions of this site in order to create an account.") 
+      input(type="checkbox" name="terms") 
       | I agree to the 
       a(href="/terms") Terms and Conditions 
       | of this site.
-      span.error
 
 
     input(type="submit" value="Submit")
@@ -41,17 +37,3 @@ block content
     a(href="/login") Login
     |  if you already have an account.
 
-
-
-block scripts
-  script(src="/assets/js/auth.validator.js")
-  script.
-    auth.validator.init([
-      $('input[name="username"]'),
-      $('input[name="email"]'),
-      $('input[name="password"]'), 
-      $('input[name="terms"]')
-    ]);
-    $('input[type="submit"]').click(function(e) {
-      if (!auth.validator.validateForm()) e.preventDefault();
-    });

@@ -42,14 +42,3 @@ block content
       a(href="/lost-password") lost-password page
       |  (for now).
 
-
-block scripts
-  script(src="/assets/js/auth.validator.js")
-  script.
-    auth.validator.init([
-      $('input[name="email')
-    ]);
-    $('input[type="submit"]').click(function(e) {
-      if (!auth.validator.validateForm()) e.preventDefault();
-    });
-    

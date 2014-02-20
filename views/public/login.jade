@@ -14,14 +14,3 @@ block content
 
   include includes/login-form
   
-
-block scripts
-  
-  script.
-    if (this.auth == null) this.auth = {};
-    this.auth.selections = {
-      body: $('body'),
-      forms: $('form')
-    }
-
-  script(src="/assets/js/auth.js")
