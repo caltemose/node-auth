@@ -1,98 +1,39 @@
 @auth ?= {}
 
-@auth.validator = 
+class Validator
 
-  fieldsToValidate: []
+  constructor: ()->
+    return @singleton_instance unless !@singleton_instance
+    @singleton_instance = @
 
-  init: (fields) ->
-    @fieldsToValidate = fields
-    @bindField field for field in @fieldsToValidate
-
-  bindField: (field) ->
-    if field.attr('type') is 'checkbox'
-      field.on 'change', @prepValidatedField
+  test: (method,input)->
+    if @[method]
+      return @[method] input
     else
-      field.on 'blur', @prepValidatedField
+      return @not_empty input
 
-  prepValidatedField: (e) ->
-    auth.validator.validateField $ e.target
+  null_selection: "-1"
 
-  validateField: (field) ->
-    valid = true
-    parent = field.parent()
-    span = parent.find 'span'
-    rules = field.attr('data-validation').split '|'
-    errorMessages = field.attr('data-validation-errors').split '|'
-    oneError = errorMessages.length < rules.length
-    errors = []
-    i = 0
 
-    for rule in rules
+  # --- VALIDATION METHODS   ----------------------------------
 
-      if rule.match(/^match-/)
-        partnerName = rule.substr(6)
-        rule = 'match'
+  not_empty: (input) ->
+    input.val().length > 0
+  
+  email: (input) ->
+    val = input.val()
+    val.match(@patterns.email) and val.length <= 54
 
-      switch rule
-        when "required" then unless field.val().length > 0
-          if oneError and errors.length < 1
-            errors.push errorMessages[0]
-          else if not oneError
-            errors.push errorMessages[i]
-        
-        when "zip" then unless field.val().match(auth.validator.patterns.zip)
-          if oneError and errors.length < 1 
-            errors.push errorMessages[0]
-          else if not oneError
-            errors.push errorMessages[i]
-        
-        when "email" then unless field.val().match(auth.validator.patterns.email)
-          if oneError and errors.length < 1
-            errors.push errorMessages[0]
-          else if not oneError
-            errors.push errorMessages[i]
-        
-        when "checked" then unless field.is(':checked')
-          if oneError and errors.length < 1 
-            errors.push errorMessages[0]
-          else if not oneError
-            errors.push errorMessages[i]
-        
-        when "match"
-          partner = $('input[name="' + partnerName + '"]')
-          if field.val().length >1 and field.val() isnt partner.val() and partner.val().length >1
-            if oneError and errors.length < 1 
-              errors.push errorMessages[0]
-            else if not oneError
-              errors.push errorMessages[i]
-        else
-          break;
+  checked: (input) ->
+    input.prop 'checked'
 
-      i++
 
-    if errors.length
-      valid = false
-      span.html errors.join '<br>' if span.length > 0
-      parent.addClass 'has-error'
-    
-    else
-      span.html('') unless span.length < 1
-      parent.removeClass 'has-error'
+  # --- PATTERNS   --------------------------------------------
 
-    if field.attr('data-match')
-      partner = $ 'input[name="' + field.attr('data-match') + '"]'
-      auth.validator.validateField partner
+  zip: /^([0-9]{5,5})$/i,  
+  phone: /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/i,
+  email: /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/i
 
-    valid
 
-  validateForm: ->
-    valid = true;
-    for field in @fieldsToValidate
-      valid = false unless @validateField field
-    valid
-    
-  # @TODO fix/test zip and phone patterns
-  patterns:  
-    zip: /^([0-9]{5,5})$/i,  
-    phone: /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/i,
-    email: /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/i
+@auth.validator = new Validator()
+

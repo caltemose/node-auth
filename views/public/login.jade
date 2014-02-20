@@ -16,11 +16,12 @@ block content
   
 
 block scripts
-  script(src="/assets/js/auth.validator.js")
+  
   script.
-    auth.validator.init([
-      $('input[name="username'), $('input[name="password')
-    ]);
-    $('input[type="submit"]').click(function(e) {
-      if (!auth.validator.validateForm()) e.preventDefault();
-    });
+    if (this.auth == null) this.auth = {};
+    this.auth.selections = {
+      body: $('body'),
+      forms: $('form')
+    }
+
+  script(src="/assets/js/auth.js")
